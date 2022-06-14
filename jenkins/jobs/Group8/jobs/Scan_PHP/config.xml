@@ -1,0 +1,30 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.41">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.93">
+    <script>node {
+  stage(&apos;Clone the Git&apos;) {
+    cleanWs()
+    git &apos;https://github.com/ngockhac113/Web_CI4.git&apos;
+  }
+  stage(&apos;SonarQube analysis&apos;) {
+    def scannerHome = tool &apos;sonarqube&apos;;
+    withSonarQubeEnv(&apos;sonarqube&apos;) {
+      sh &quot;${scannerHome}/bin/sonar-scanner \
+      -D sonar.login=admin \
+      -D sonar.password=1 \
+      -D sonar.projectKey=PHP \
+      -D sonar.language=PHP \
+      -Dsonar.sources=. \
+      -D sonar.host.url=http://02e0-1-54-212-184.ngrok.io/&quot;
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
